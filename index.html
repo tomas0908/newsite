@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URBAN STORE</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#0a0a0a;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+
+/* ── HEADER ── */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:68px;
+  border-bottom:1px solid #e8e8e8;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(12px);
+  transition:all .3s ease;
+}
+.header.scrolled{height:60px;border-bottom-color:#0a0a0a}
+.logo{font-size:18px;font-weight:800;letter-spacing:4px;text-transform:uppercase}
+.logo span{color:#bbb}
+.nav{display:flex;gap:36px}
+.nav a{
+  font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:#999;transition:color .2s;
+  position:relative;padding-bottom:3px;
+}
+.nav a::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:0;height:1.5px;background:#0a0a0a;transition:width .3s ease;
+}
+.nav a:hover{color:#0a0a0a}
+.nav a:hover::after{width:100%}
+.header-right{display:flex;align-items:center;gap:12px}
+.icon-btn{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;transition:background .2s;
+}
+.icon-btn:hover{background:#f5f5f5}
+.icon-btn svg{width:20px;height:20px;stroke:#0a0a0a;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cart-dot{
+  position:absolute;top:6px;right:6px;
+  width:8px;height:8px;border-radius:50%;background:#0a0a0a;
+  border:1.5px solid #fff;
+  opacity:0;transition:opacity .2s;
+}
+.cart-dot.show{opacity:1}
+.burger-btn{
+  display:none;flex-direction:column;gap:5px;
+  width:40px;height:40px;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.burger-btn span{display:block;width:22px;height:1.5px;background:#0a0a0a;transition:all .3s ease}
+.burger-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.burger-btn.open span:nth-child(2){opacity:0}
+.burger-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+/* ── MOBILE MENU ── */
+.mobile-menu{
+  display:none;
+  position:fixed;inset:68px 0 0;z-index:99;
+  background:#fff;
+  padding:48px;
+  flex-direction:column;gap:0;
+  transform:translateX(100%);
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+  border-top:1px solid #e8e8e8;
+}
+.mobile-menu.open{transform:translateX(0)}
+.mobile-menu a{
+  font-size:36px;font-weight:800;text-transform:uppercase;letter-spacing:-1px;
+  color:#e8e8e8;padding:16px 0;
+  border-bottom:1px solid #f5f5f5;
+  transition:color .2s;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.mobile-menu a:hover{color:#0a0a0a}
+.mobile-menu a::after{content:'→';font-size:24px;color:#e8e8e8;transition:color .2s}
+.mobile-menu a:hover::after{color:#0a0a0a}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  padding-top:68px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* HERO TOP — TAGLINE ROW */
+.hero-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:28px 48px;
+  border-bottom:1px solid #e8e8e8;
+}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#999}
+.hero-tag-right{display:flex;align-items:center;gap:24px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#0a0a0a;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO MAIN */
+.hero-main{
+  flex:1;display:flex;
+  position:relative;
+}
+
+/* LEFT PANEL */
+.hero-left{
+  width:55%;
+  padding:60px 48px 60px;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  border-right:1px solid #e8e8e8;
+}
+.hero-index{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#bbb;margin-bottom:40px}
+
+.hero-title{
+  font-size:clamp(64px,7.5vw,110px);
+  font-weight:900;
+  line-height:.9;
+  letter-spacing:-3px;
+  text-transform:uppercase;
+  flex:1;display:flex;align-items:flex-start;flex-direction:column;justify-content:center;
+}
+.hero-title .line{overflow:hidden;display:block}
+.hero-title .word{
+  display:inline-block;
+  transform:translateY(100%);
+  animation:slideUp .8s cubic-bezier(.4,0,.2,1) forwards;
+}
+.hero-title .word:nth-child(1){animation-delay:.1s}
+.hero-title .word:nth-child(2){animation-delay:.2s}
+.hero-title .word:nth-child(3){animation-delay:.3s}
+.hero-title .word:nth-child(4){animation-delay:.4s}
+.hero-title .word.muted{color:#e0e0e0}
+@keyframes slideUp{to{transform:translateY(0)}}
+
+.hero-cta-row{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+  margin-top:48px;
+}
+.hero-sub{font-size:13px;color:#999;line-height:1.7;max-width:220px}
+
+/* BUTTONS */
+.btn-hero-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 32px;
+  background:#0a0a0a;color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  border-radius:2px;
+  transition:all .3s ease;
+  white-space:nowrap;
+  position:relative;overflow:hidden;
+}
+.btn-hero-primary::before{
+  content:'';position:absolute;inset:0;background:#fff;
+  transform:translateX(-101%);transition:transform .35s ease;
+}
+.btn-hero-primary:hover::before{transform:translateX(0)}
+.btn-hero-primary:hover{color:#0a0a0a;border:1px solid #0a0a0a}
+.btn-hero-primary span{position:relative;z-index:1}
+.btn-hero-primary .arrow{position:relative;z-index:1;transition:transform .3s ease}
+.btn-hero-primary:hover .arrow{transform:translateX(4px)}
+
+.btn-hero-ghost{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:15px 32px;
+  background:transparent;color:#0a0a0a;
+  font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  border:1px solid #e8e8e8;border-radius:2px;
+  transition:all .3s ease;
+  white-space:nowrap;
+}
+.btn-hero-ghost:hover{border-color:#0a0a0a}
+.btn-hero-ghost .arrow{transition:transform .3s ease}
+.btn-hero-ghost:hover .arrow{transform:translateX(4px)}
+
+/* RIGHT PANEL */
+.hero-right{
+  width:45%;
+  display:flex;flex-direction:column;
+}
+.hero-image-block{
+  flex:1;
+  position:relative;
+  background:#f9f9f9;
+  overflow:hidden;
+  /* 👉 ТУТ БУДЕ ГОЛОВНЕ ФОТО */
+  display:flex;align-items:center;justify-content:center;
+}
+.photo-placeholder{
+  text-align:center;
+}
+.photo-label{
+  font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+  color:#ccc;border:1px dashed #e0e0e0;padding:16px 24px;border-radius:2px;
+}
+/* Щоб додати фото — розкоментуй: */
+/*
+.hero-image-block img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s ease;
+}
+.hero-image-block:hover img{transform:scale(1.03)}
+*/
+
+.hero-image-bottom{
+  padding:24px 32px;
+  border-top:1px solid #e8e8e8;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;
+}
+.collection-info{}
+.collection-label{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#bbb;margin-bottom:4px}
+.collection-name{font-size:14px;font-weight:700;letter-spacing:.5px}
+.collection-year{font-size:10px;color:#bbb;margin-top:2px}
+
+.hero-scroll-hint{
+  display:flex;align-items:center;gap:8px;
+  font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#ccc;
+}
+.scroll-line{
+  width:1px;height:32px;background:#e0e0e0;position:relative;overflow:hidden;
+}
+.scroll-line::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:#0a0a0a;
+  animation:scrollDown 1.5s ease infinite;
+}
+@keyframes scrollDown{0%{transform:translateY(-100%)}100%{transform:translateY(200%)}}
+
+/* ── TICKER ── */
+.ticker{
+  background:#0a0a0a;color:#fff;
+  padding:12px 0;
+  overflow:hidden;
+}
+.ticker-inner{
+  display:flex;white-space:nowrap;
+  animation:ticker 28s linear infinite;
+}
+.ticker-item{
+  display:inline-flex;align-items:center;gap:32px;
+  padding:0 48px;
+  font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;
+}
+.ticker-item::after{content:'—';opacity:.3}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── STATS ROW ── */
+.stats{
+  display:flex;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;
+}
+.stat{
+  flex:1;padding:40px 48px;
+  border-right:1px solid #e8e8e8;
+  transition:background .2s;
+}
+.stat:last-child{border-right:none}
+.stat:hover{background:#fafafa}
+.stat-num{font-size:48px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:6px}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#999}
+
+/* ── CATEGORIES ROW ── */
+.cats{
+  display:flex;
+  border-bottom:1px solid #e8e8e8;
+}
+.cat{
+  flex:1;border-right:1px solid #e8e8e8;
+  padding:40px 48px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:all .3s ease;
+  min-height:180px;
+}
+.cat:last-child{border-right:none}
+.cat::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:#0a0a0a;transform:scaleX(0);transform-origin:left;
+  transition:transform .35s ease;
+}
+.cat:hover::after{transform:scaleX(1)}
+.cat:hover .cat-arrow{transform:translate(4px,-4px)}
+.cat-left{}
+.cat-num{font-size:11px;font-weight:600;letter-spacing:2px;color:#ccc;margin-bottom:12px}
+.cat-name{font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:-1px}
+.cat-count{font-size:12px;color:#999;margin-top:6px}
+.cat-arrow{
+  font-size:20px;transition:transform .3s ease;
+  color:#ccc;align-self:flex-start;
+}
+.cat:hover .cat-arrow{color:#0a0a0a}
+
+/* ── CART DROPDOWN ── */
+.cart-drop{
+  position:fixed;top:68px;right:24px;z-index:200;
+  width:320px;
+  background:#fff;border:1px solid #e8e8e8;
+  transform:translateY(-8px) scale(.97);
+  opacity:0;pointer-events:none;
+  transition:all .25s ease;
+}
+.cart-drop.show{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
+.cart-drop-head{padding:20px 24px 16px;border-bottom:1px solid #e8e8e8;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+.cart-empty{padding:40px 24px;text-align:center;font-size:13px;color:#bbb;font-weight:500}
+.cart-foot{padding:16px 24px;border-top:1px solid #e8e8e8}
+.cart-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.cart-total-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#999}
+.cart-total-val{font-size:20px;font-weight:900}
+.cart-checkout{
+  display:block;width:100%;padding:13px;
+  background:#0a0a0a;color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  text-align:center;border-radius:2px;
+  transition:opacity .2s;
+}
+.cart-checkout:hover{opacity:.8}
+
+/* ── TOAST ── */
+.toasts{position:fixed;bottom:32px;right:32px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{
+  background:#0a0a0a;color:#fff;
+  padding:14px 20px;
+  font-size:12px;font-weight:600;letter-spacing:.5px;
+  display:flex;align-items:center;gap:8px;
+  animation:toastIn .3s ease;
+}
+.toast.out{animation:toastOut .3s ease forwards}
+@keyframes toastIn{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes toastOut{to{transform:translateY(12px);opacity:0}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .header{padding:0 24px}
+  .nav{display:none}
+  .burger-btn{display:flex}
+  .hero-top,.hero-left,.cat{padding-left:24px;padding-right:24px}
+  .stats .stat{padding:28px 24px}
+  .stat-num{font-size:36px}
+  .hero-main{flex-direction:column}
+  .hero-left,.hero-right{width:100%}
+  .hero-left{border-right:none;border-bottom:1px solid #e8e8e8}
+  .hero-image-block{min-height:360px}
+  .hero-title{font-size:clamp(48px,12vw,80px)}
+  .cats{flex-wrap:wrap}
+  .cat{flex:0 0 50%;min-height:140px}
+  .cat:nth-child(2){border-right:none}
+}
+@media(max-width:600px){
+  .hero-title{font-size:48px;letter-spacing:-2px}
+  .hero-cta-row{flex-direction:column;align-items:flex-start}
+  .cats{flex-direction:column}
+  .cat{flex:none;width:100%;border-right:none}
+  .mobile-menu a{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header" id="header">
+  <a class="logo" href="#">
+    <!-- 👉 НАЗВА МАГАЗИНУ -->
+    URBAN<span>STORE</span>
+  </a>
+
+  <nav class="nav">
+    <a href="#">Головна</a>
+    <a href="#">Кросівки</a>
+    <a href="#">Одяг</a>
+    <a href="#">Аксесуари</a>
+    <a href="#">Розпродаж</a>
+  </nav>
+
+  <div class="header-right">
+    <button class="icon-btn" id="cart-btn">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="cart-dot" id="cart-dot"></span>
+    </button>
+    <button class="icon-btn">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+    </button>
+    <button class="burger-btn" id="burger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── MOBILE MENU ── -->
+<nav class="mobile-menu" id="mobile-menu">
+  <a href="#" onclick="closeMenu()">Головна</a>
+  <a href="#" onclick="closeMenu()">Кросівки</a>
+  <a href="#" onclick="closeMenu()">Одяг</a>
+  <a href="#" onclick="closeMenu()">Аксесуари</a>
+  <a href="#" onclick="closeMenu()">Розпродаж</a>
+</nav>
+
+<!-- ── CART DROPDOWN ── -->
+<div class="cart-drop" id="cart-drop">
+  <div class="cart-drop-head">Кошик</div>
+  <div class="cart-empty">Кошик порожній</div>
+  <div class="cart-foot" style="display:none" id="cart-foot">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Разом</span>
+      <span class="cart-total-val">0 ₴</span>
+    </div>
+    <a href="#" class="cart-checkout">Оформити замовлення →</a>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+
+  <!-- TAGLINE ROW -->
+  <div class="hero-top">
+    <span class="hero-tag">
+      <!-- 👉 ПІДЗАГОЛОВОК -->
+      Колекція — Весна / Літо 2025
+    </span>
+    <div class="hero-tag-right">
+      <span class="hero-tag">В наявності</span>
+      <span class="status-dot"></span>
+    </div>
+  </div>
+
+  <!-- MAIN SPLIT -->
+  <div class="hero-main">
+
+    <!-- LEFT: TEXT -->
+    <div class="hero-left">
+      <div class="hero-index">FIG. 01 / КОЛЕКЦІЯ</div>
+
+      <h1 class="hero-title">
+        <!-- 👉 ЗАГОЛОВОК — змінюй текст тут -->
+        <span class="line"><span class="word">ОДЯГНИ</span></span>
+        <span class="line"><span class="word muted">СВОЄ</span></span>
+        <span class="line"><span class="word">МІСТО</span></span>
+      </h1>
+
+      <div class="hero-cta-row">
+        <p class="hero-sub">
+          <!-- 👉 КОРОТКИЙ ОПИС -->
+          Streetwear для тих, хто не вписується в&nbsp;рамки
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn-hero-primary" onclick="toast('✓ Переходимо до колекції')">
+            <span>Переглянути</span>
+            <span class="arrow">→</span>
+          </button>
+          <button class="btn-hero-ghost" onclick="toast('→ Розпродаж')">
+            <span>Розпродаж</span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: IMAGE -->
+    <div class="hero-right">
+      <div class="hero-image-block">
+
+        <!--
+          👉 ЩОБ ВСТАВИТИ ФОТО:
+          1. Видали блок .photo-placeholder нижче
+          2. Розкоментуй тег <img> і вставте посилання на фото
+        -->
+        <!-- <img src="ТВОЄ_ПОСИЛАННЯ_НА_ФОТО" alt="Hero"> -->
+
+        <div class="photo-placeholder">
+          <div class="photo-label">👉 ВСТАВТЕ ФОТО СЮДИ</div>
+        </div>
+
+      </div>
+      <div class="hero-image-bottom">
+        <div class="collection-info">
+          <div class="collection-label">Колекція</div>
+          <!-- 👉 НАЗВА КОЛЕКЦІЇ -->
+          <div class="collection-name">Urban SS 2025</div>
+          <div class="collection-year">500+ позицій в наявності</div>
+        </div>
+        <div class="hero-scroll-hint">
+          <div class="scroll-line"></div>
+          <span>Scroll</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <!-- 👉 ТЕКСТ СТРІЧКИ -->
+    <span class="ticker-item">Нова колекція 2025</span>
+    <span class="ticker-item">Безкоштовна доставка від 1500₴</span>
+    <span class="ticker-item">Повернення 30 днів</span>
+    <span class="ticker-item">Оплата частинами</span>
+    <span class="ticker-item">Знижки до -50%</span>
+    <span class="ticker-item">Оригінальна продукція</span>
+    <span class="ticker-item">Нова колекція 2025</span>
+    <span class="ticker-item">Безкоштовна доставка від 1500₴</span>
+    <span class="ticker-item">Повернення 30 днів</span>
+    <span class="ticker-item">Оплата частинами</span>
+    <span class="ticker-item">Знижки до -50%</span>
+    <span class="ticker-item">Оригінальна продукція</span>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats">
+  <div class="stat">
+    <!-- 👉 ЦИФРИ — змінити на свої -->
+    <div class="stat-num">500+</div>
+    <div class="stat-label">Товарів в наявності</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">3</div>
+    <div class="stat-label">Категорії</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">30</div>
+    <div class="stat-label">Днів на повернення</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">1500₴</div>
+    <div class="stat-label">Від — безкоштовна доставка</div>
+  </div>
+</div>
+
+<!-- ── CATEGORIES ── -->
+<div class="cats">
+  <div class="cat" onclick="toast('→ Кросівки')">
+    <div class="cat-left">
+      <div class="cat-num">01</div>
+      <div class="cat-name">Кросівки</div>
+      <!-- 👉 КІЛЬКІСТЬ ТОВАРІВ -->
+      <div class="cat-count">87 товарів</div>
+    </div>
+    <span class="cat-arrow">↗</span>
+  </div>
+  <div class="cat" onclick="toast('→ Одяг')">
+    <div class="cat-left">
+      <div class="cat-num">02</div>
+      <div class="cat-name">Одяг</div>
+      <div class="cat-count">124 товари</div>
+    </div>
+    <span class="cat-arrow">↗</span>
+  </div>
+  <div class="cat" onclick="toast('→ Аксесуари')">
+    <div class="cat-left">
+      <div class="cat-num">03</div>
+      <div class="cat-name">Аксесуари</div>
+      <div class="cat-count">63 товари</div>
+    </div>
+    <span class="cat-arrow">↗</span>
+  </div>
+</div>
+
+<!-- ── TOASTS ── -->
+<div class="toasts" id="toasts"></div>
+
+<script>
+// ── HEADER SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 40)
+})
+
+// ── BURGER ──
+function toggleMenu() {
+  const b = document.getElementById('burger')
+  const m = document.getElementById('mobile-menu')
+  b.classList.toggle('open')
+  m.style.display = 'flex'
+  requestAnimationFrame(() => m.classList.toggle('open'))
+}
+function closeMenu() {
+  document.getElementById('burger').classList.remove('open')
+  document.getElementById('mobile-menu').classList.remove('open')
+}
+
+// ── CART TOGGLE ──
+const cartBtn = document.getElementById('cart-btn')
+const cartDrop = document.getElementById('cart-drop')
+cartBtn.addEventListener('click', e => {
+  e.stopPropagation()
+  cartDrop.classList.toggle('show')
+})
+document.addEventListener('click', e => {
+  if (!cartDrop.contains(e.target)) cartDrop.classList.remove('show')
+})
+
+// ── TOAST ──
+function toast(msg) {
+  const c = document.getElementById('toasts')
+  const t = document.createElement('div')
+  t.className = 'toast'
+  t.textContent = msg
+  c.appendChild(t)
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300) }, 2500)
+}
+</script>
+</body>
+</html>
